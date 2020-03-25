@@ -39,7 +39,7 @@ RCT_EXPORT_VIEW_PROPERTY(hitbox, NSDictionary)
 
 RCT_EXPORT_METHOD(features:(nonnull NSNumber*)reactTag
                   withLayerIDs:(NSArray<NSString*>*)layerIDs
-                  withFilter:(NSArray<NSDictionary<NSString *, id> *> *)filter
+                  withFilter:(NSArray*)filter
                   resolver:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)
 {

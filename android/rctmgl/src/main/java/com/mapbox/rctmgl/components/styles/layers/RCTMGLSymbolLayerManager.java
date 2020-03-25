@@ -72,4 +72,9 @@ public class RCTMGLSymbolLayerManager extends ViewGroupManager<RCTMGLSymbolLayer
     public void setFilter(RCTMGLSymbolLayer layer, ReadableArray filterList) {
         layer.setFilter(filterList);
     }
+
+    @ReactProp(name="draggable")
+    public void setDraggable(RCTMGLSymbolLayer layer, boolean draggable) {
+        layer.setDraggable(draggable);
+    }
 }

@@ -176,6 +176,9 @@ class ShapeSource extends AbstractSource {
       hitbox: this.props.hitbox,
       hasPressListener: isFunction(this.props.onPress),
       onMapboxShapeSourcePress: this.props.onPress,
+      onMapboxShapeSourceDragStart: this.props.onDragStart,
+      onMapboxShapeSourceDrag: this.props.onDrag,
+      onMapboxShapeSourceDragEnd: this.props.onDragEnd,
       cluster: this.props.cluster ? 1 : 0,
       clusterRadius: this.props.clusterRadius,
       clusterMaxZoomLevel: this.props.clusterMaxZoomLevel,
@@ -184,6 +187,9 @@ class ShapeSource extends AbstractSource {
       tolerance: this.props.tolerance,
       ...this._getImages(),
       onPress: undefined,
+      onDragStart: undefined,
+      onDrag: undefined,
+      onDragEnd: undefined,
     };
 
     return (
@@ -204,6 +210,7 @@ const RCTMGLShapeSource = requireNativeComponent(
       nativeImages: true,
       hasPressListener: true,
       onMapboxShapeSourcePress: true,
+      onMapboxShapeSourceDrag: true,
     },
   },
 );

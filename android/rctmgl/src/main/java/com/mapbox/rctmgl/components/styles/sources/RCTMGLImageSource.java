@@ -6,6 +6,7 @@ import android.util.Log;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.react.views.imagehelper.ResourceDrawableIdHelper;
 import com.mapbox.geojson.Feature;
+import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.geometry.LatLngQuad;
 import com.mapbox.mapboxsdk.style.sources.ImageSource;
 
@@ -40,6 +41,21 @@ public class RCTMGLImageSource extends RCTSource<ImageSource> {
     @Override
     public void onPress(Feature feature) {
         // ignore, we cannot query raster layers
+    }
+
+    @Override
+    public void onDragStart(Feature feature, LatLng point) {
+        // Not implemented yet
+    }
+
+    @Override
+    public void onDrag(Feature feature, LatLng point) {
+        // Not implemented yet
+    }
+
+    @Override
+    public void onDragEnd(Feature feature, LatLng point) {
+        // Not implemented yet
     }
 
     public void setURL(String url) {

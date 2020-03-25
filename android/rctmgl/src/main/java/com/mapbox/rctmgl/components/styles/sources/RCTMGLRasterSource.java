@@ -3,6 +3,7 @@ package com.mapbox.rctmgl.components.styles.sources;
 import android.content.Context;
 
 import com.mapbox.geojson.Feature;
+import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.style.sources.RasterSource;
 
 import static com.mapbox.mapboxsdk.style.sources.RasterSource.DEFAULT_TILE_SIZE;
@@ -41,5 +42,20 @@ public class RCTMGLRasterSource extends RCTMGLTileSource<RasterSource> {
     @Override
     public void onPress(Feature feature) {
         // ignore, cannot query raster layers
+    }
+
+    @Override
+    public void onDragStart(Feature feature, LatLng point) {
+        // Not implemented yet
+    }
+
+    @Override
+    public void onDrag(Feature feature, LatLng point) {
+        // Not implemented yet
+    }
+
+    @Override
+    public void onDragEnd(Feature feature, LatLng point) {
+        // Not implemented yet
     }
 }

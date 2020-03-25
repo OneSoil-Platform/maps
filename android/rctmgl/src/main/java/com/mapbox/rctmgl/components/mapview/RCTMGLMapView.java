@@ -7,7 +7,7 @@ import android.graphics.PointF;
 import android.graphics.RectF;
 import android.location.Location;
 import android.os.Handler;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.util.DisplayMetrics;
 import android.util.Pair;
 import android.view.Gravity;
@@ -39,6 +39,7 @@ import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.maps.UiSettings;
 import com.mapbox.mapboxsdk.plugins.annotation.OnSymbolClickListener;
 import com.mapbox.mapboxsdk.plugins.annotation.OnSymbolDragListener;
+import com.mapbox.mapboxsdk.plugins.localization.LocalizationPlugin;
 import com.mapbox.mapboxsdk.plugins.annotation.Symbol;
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolManager;
 import com.mapbox.mapboxsdk.style.expressions.Expression;
@@ -99,6 +100,9 @@ public class RCTMGLMapView extends MapView implements OnMapReadyCallback, Mapbox
     private Map<String, RCTMGLPointAnnotation> mPointAnnotations;
     private Map<String, RCTSource> mSources;
 
+    private Feature mDraggedFeature = null;
+    private RCTSource mDraggedSource = null;
+
     private CameraChangeTracker mCameraChangeTracker = new CameraChangeTracker();
     private List<Pair<Integer, ReadableArray>> mPreRenderMethods = new ArrayList<>();
 
@@ -120,6 +124,9 @@ public class RCTMGLMapView extends MapView implements OnMapReadyCallback, Mapbox
     private Boolean mZoomEnabled;
 
     private SymbolManager symbolManager;
+
+    private LocalizationPlugin mLocalizationPlugin;
+    private String mLocalizedPlaceField = "name";
 
     private long mActiveMarkerID = -1;
 
@@ -397,6 +404,7 @@ public class RCTMGLMapView extends MapView implements OnMapReadyCallback, Mapbox
             @Override
             public void onStyleLoaded(@NonNull Style style) {
                 createSymbolManager(style);
+                setupLocalization(style);
                 setUpImage(style);
                 addQueuedFeatures();
             }
@@ -503,6 +511,10 @@ public class RCTMGLMapView extends MapView implements OnMapReadyCallback, Mapbox
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
+        if (handleDraggables(ev)) {
+            return true;
+        }
+
         boolean result = super.onTouchEvent(ev);
 
         if (result && mScrollEnabled) {
@@ -533,7 +545,7 @@ public class RCTMGLMapView extends MapView implements OnMapReadyCallback, Mapbox
         List<RCTSource> hitTouchableSources = new ArrayList<>();
         for (RCTSource touchableSource : touchableSources) {
             Map<String, Double> hitbox = touchableSource.getTouchHitbox();
-            if (hitbox == null) {
+            if (hitbox == null || touchableSource.getLayerCount() == 0) {
                 continue;
             }
 
@@ -713,6 +725,13 @@ public class RCTMGLMapView extends MapView implements OnMapReadyCallback, Mapbox
         updateInsets();
     }
 
+    public void setReactLocale(String locale) {
+        mLocalizedPlaceField = locale == null ? "name" : "name_" + locale;
+        if (mLocalizationPlugin != null) {
+            mLocalizationPlugin.setMapLanguage(mLocalizedPlaceField);
+        }
+    }
+
     public void setLocalizeLabels(boolean localizeLabels) {
         mLocalizeLabels = localizeLabels;
     }
@@ -849,6 +868,10 @@ public class RCTMGLMapView extends MapView implements OnMapReadyCallback, Mapbox
     }
 
     public void getCoordinateFromView(String callbackID, PointF pointInView) {
+        final DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
+        pointInView.x *= metrics.scaledDensity;
+        pointInView.y *= metrics.scaledDensity;
+
         float density = getDisplayDensity();
         pointInView.x *= density;
         pointInView.y *= density;
@@ -1203,6 +1226,52 @@ public class RCTMGLMapView extends MapView implements OnMapReadyCallback, Mapbox
         }
 
         mManager.handleEvent(event);
+    }
+
+    private boolean handleDraggables(MotionEvent ev) {
+        PointF tapPoint = new PointF(ev.getX(), ev.getY());
+        if (mDraggedFeature != null && (ev.getActionMasked() == MotionEvent.ACTION_UP || ev.getActionMasked() == MotionEvent.ACTION_CANCEL)) {
+            mDraggedSource.onDragEnd(mDraggedFeature, mMap.getProjection().fromScreenLocation(tapPoint));
+            mDraggedFeature = null;
+            mDraggedSource = null;
+            return true;
+        }
+        if (mDraggedFeature != null && ev.getActionMasked() != MotionEvent.ACTION_DOWN) {
+            mDraggedSource.onDrag(mDraggedFeature, mMap.getProjection().fromScreenLocation(tapPoint));
+            return true;
+        }
+
+        final float screenDensity = getResources().getDisplayMetrics().density;
+        float toleranceSides = 4 * screenDensity;
+        float toleranceTopBottom = 4 * screenDensity;
+        float averageIconWidth = 42;
+        float averageIconHeight = 42;
+        RectF tapRect = new RectF((tapPoint.x - averageIconWidth / 2 - toleranceSides),
+                (tapPoint.y - averageIconHeight / 2 - toleranceTopBottom),
+                (tapPoint.x + averageIconWidth / 2 + toleranceSides),
+                (tapPoint.y + averageIconHeight / 2 + toleranceTopBottom));
+        for (RCTSource source : mSources.values()) {
+            for (int i = 0; i < source.getLayerCount(); i++) {
+                RCTLayer layer = source.getLayerAt(i);
+                if (!layer.isDraggable()) {
+                    continue;
+                }
+                List<Feature> features = mMap.queryRenderedFeatures(tapRect, layer.getFilter(), layer.getID());
+                if (features.isEmpty()) {
+                    continue;
+                }
+                mDraggedSource = source;
+                mDraggedFeature = features.get(0);
+                source.onDragStart(mDraggedFeature, mMap.getProjection().fromScreenLocation(tapPoint));
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void setupLocalization(Style style) {
+        mLocalizationPlugin = new LocalizationPlugin(this, mMap, style);
+        mLocalizationPlugin.setMapLanguage(mLocalizedPlaceField);
     }
 
     private boolean canHandleEvent(String event) {

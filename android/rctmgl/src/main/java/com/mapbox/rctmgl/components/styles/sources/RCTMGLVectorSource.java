@@ -1,13 +1,14 @@
 package com.mapbox.rctmgl.components.styles.sources;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
-import android.support.annotation.Size;
+import androidx.annotation.Nullable;
+import androidx.annotation.Size;
 
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeMap;
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
+import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.style.expressions.Expression;
 import com.mapbox.mapboxsdk.style.sources.VectorSource;
 import com.mapbox.rctmgl.events.AndroidCallbackEvent;
@@ -29,6 +30,21 @@ public class RCTMGLVectorSource extends RCTMGLTileSource<VectorSource> {
 
     public void onPress(Feature feature) {
         mManager.handleEvent(FeatureClickEvent.makeVectorSourceEvent(this, feature));
+    }
+
+    @Override
+    public void onDragStart(Feature feature, LatLng point) {
+        // Not implemented yet
+    }
+
+    @Override
+    public void onDrag(Feature feature, LatLng point) {
+        // Not implemented yet
+    }
+
+    @Override
+    public void onDragEnd(Feature feature, LatLng point) {
+        // Not implemented yet
     }
 
     @Override

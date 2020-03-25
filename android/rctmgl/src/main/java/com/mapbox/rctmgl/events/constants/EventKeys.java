@@ -23,6 +23,9 @@ public class EventKeys {
 
     // source events
     public static final String SHAPE_SOURCE_LAYER_CLICK = ns("shapesource.layer.pressed");
+    public static final String SHAPE_SOURCE_LAYER_DRAG_START = ns("shapesource.layer.drag_started");
+    public static final String SHAPE_SOURCE_LAYER_DRAG = ns("shapesource.layer.dragged");
+    public static final String SHAPE_SOURCE_LAYER_DRAG_END = ns("shapesource.layer.drag_ended");
     public static final String VECTOR_SOURCE_LAYER_CLICK = ns("vectorsource.layer.pressed");
     public static final String RASTER_SOURCE_LAYER_CLICK = ns("rastersource.layer.pressed");
 

@@ -13,7 +13,7 @@ class AbstractLayer extends React.PureComponent {
       ...this.props,
       id: this.props.id,
       sourceID: this.props.sourceID,
-      reactStyle: this.getStyle(),
+      reactStyle: this.getStyle(this.props.style),
       minZoomLevel: this.props.minZoomLevel,
       maxZoomLevel: this.props.maxZoomLevel,
       aboveLayerID: this.props.aboveLayerID,
@@ -30,16 +30,16 @@ class AbstractLayer extends React.PureComponent {
     }
   }
 
-  getStyle() {
-    if (!this.props.style) {
+  getStyle(style) {
+    if (!style) {
       return;
     }
 
     const nativeStyle = {};
-    const styleProps = Object.keys(this.props.style);
+    const styleProps = Object.keys(style);
     for (const styleProp of styleProps) {
       const styleType = getStyleType(styleProp);
-      let rawStyle = this.props.style[styleProp];
+      let rawStyle = style[styleProp];
 
       if (styleType === 'color' && typeof rawStyle === 'string') {
         rawStyle = processColor(rawStyle);
@@ -59,6 +59,9 @@ class AbstractLayer extends React.PureComponent {
 
   setNativeProps(props) {
     if (this.refs.nativeLayer) {
+      if (props.style) {
+        props = { ...props, reactStyle: this.getStyle(props.style) };
+      }
       this.refs.nativeLayer.setNativeProps(props);
     }
   }
