@@ -111,7 +111,15 @@ class OfflineManager {
     if (offlinePack) {
       await MapboxGLOfflineManager.deletePack(name);
       delete this._offlinePacks[name];
+    } else {
+      throw new Error(
+        `Offline pack with name ${name} does not exist.`,
+      );
     }
+  }
+
+  async clearAmbientCache() {
+    await MapboxGLOfflineManager.clearAmbientCache();
   }
 
   /**

@@ -1,30 +1,30 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import {NativeModules, requireNativeComponent} from 'react-native';
+import React from "react";
+import PropTypes from "prop-types";
+import { NativeModules, requireNativeComponent } from "react-native";
 
-import {getFilter} from '../utils/filterUtils';
+import { getFilter } from "../utils/filterUtils";
 import {
   toJSONString,
   cloneReactChildrenWithProps,
   viewPropTypes,
   isFunction,
   isAndroid,
-} from '../utils';
-import {copyPropertiesAsDeprecated} from '../utils/deprecation';
+} from "../utils";
+import { copyPropertiesAsDeprecated } from "../utils/deprecation";
 
-import AbstractSource from './AbstractSource';
-import NativeBridgeComponent from './NativeBridgeComponent';
+import AbstractSource from "./AbstractSource";
+import NativeBridgeComponent from "./NativeBridgeComponent";
 
 const MapboxGL = NativeModules.MGLModule;
 
-export const NATIVE_MODULE_NAME = 'RCTMGLShapeSource';
+export const NATIVE_MODULE_NAME = "RCTMGLShapeSource";
 
 /**
  * ShapeSource is a map content source that supplies vector shapes to be shown on the map.
  * The shape may be a url or a GeoJSON object
  */
 class ShapeSource extends NativeBridgeComponent(AbstractSource) {
-  static NATIVE_ASSETS_KEY = 'assets';
+  static NATIVE_ASSETS_KEY = "assets";
 
   static propTypes = {
     ...viewPropTypes,
@@ -136,7 +136,7 @@ class ShapeSource extends NativeBridgeComponent(AbstractSource) {
    * @return {FeatureCollection}
    */
   async features(filter = []) {
-    const res = await this._runNativeCommand('features', this._nativeRef, [
+    const res = await this._runNativeCommand("features", this._nativeRef, [
       getFilter(filter),
     ]);
 
@@ -151,7 +151,7 @@ class ShapeSource extends NativeBridgeComponent(AbstractSource) {
     const shallowProps = Object.assign({}, props);
 
     // Adds support for Animated
-    if (shallowProps.shape && typeof shallowProps !== 'string') {
+    if (shallowProps.shape && typeof shallowProps !== "string") {
       shallowProps.shape = JSON.stringify(shallowProps.shape);
     }
 
@@ -168,7 +168,7 @@ class ShapeSource extends NativeBridgeComponent(AbstractSource) {
   onPress(event) {
     const {
       nativeEvent: {
-        payload: {features, coordinates, point},
+        payload: { features, coordinates, point },
       },
     } = event;
     let newEvent = {
@@ -181,7 +181,7 @@ class ShapeSource extends NativeBridgeComponent(AbstractSource) {
       newEvent,
       (key) => {
         console.warn(
-          `event.${key} is deprecated on ShapeSource#onPress, please use event.features`,
+          `event.${key} is deprecated on ShapeSource#onPress, please use event.features`
         );
       },
       {
@@ -189,7 +189,7 @@ class ShapeSource extends NativeBridgeComponent(AbstractSource) {
           ...origNativeEvent,
           payload: features[0],
         }),
-      },
+      }
     );
     this.props.onPress(newEvent);
   }
@@ -202,6 +202,9 @@ class ShapeSource extends NativeBridgeComponent(AbstractSource) {
       hitbox: this.props.hitbox,
       hasPressListener: isFunction(this.props.onPress),
       onMapboxShapeSourcePress: this.onPress.bind(this),
+      onMapboxShapeSourceDragStart: this.props.onDragStart,
+      onMapboxShapeSourceDrag: this.props.onDrag,
+      onMapboxShapeSourceDragEnd: this.props.onDragEnd,
       cluster: this.props.cluster ? 1 : 0,
       clusterRadius: this.props.clusterRadius,
       clusterMaxZoomLevel: this.props.clusterMaxZoomLevel,
@@ -209,6 +212,9 @@ class ShapeSource extends NativeBridgeComponent(AbstractSource) {
       buffer: this.props.buffer,
       tolerance: this.props.tolerance,
       onPress: undefined,
+      onDragStart: undefined,
+      onDrag: undefined,
+      onDragEnd: undefined,
       ref: (nativeRef) => this._setNativeRef(nativeRef),
       onAndroidCallback: isAndroid() ? this._onAndroidCallback : undefined,
     };
@@ -230,8 +236,9 @@ const RCTMGLShapeSource = requireNativeComponent(
     nativeOnly: {
       hasPressListener: true,
       onMapboxShapeSourcePress: true,
+      onMapboxShapeSourceDrag: true,
     },
-  },
+  }
 );
 
 export default ShapeSource;

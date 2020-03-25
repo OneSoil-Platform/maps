@@ -12,6 +12,7 @@ import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeMap;
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
+import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.Style;
 import com.mapbox.mapboxsdk.style.expressions.Expression;
@@ -22,6 +23,7 @@ import com.mapbox.rctmgl.R;
 import com.mapbox.rctmgl.components.mapview.RCTMGLMapView;
 import com.mapbox.rctmgl.events.AndroidCallbackEvent;
 import com.mapbox.rctmgl.events.FeatureClickEvent;
+import com.mapbox.rctmgl.events.FeatureDragEvent;
 import com.mapbox.rctmgl.utils.DownloadMapImageTask;
 import com.mapbox.rctmgl.utils.ImageEntry;
 
@@ -123,6 +125,21 @@ public class RCTMGLShapeSource extends RCTSource<GeoJsonSource> {
 
     public void onPress(OnPressEvent event) {
         mManager.handleEvent(FeatureClickEvent.makeShapeSourceEvent(this, event));
+    }
+
+    @Override
+    public void onDragStart(Feature feature, LatLng point) {
+        mManager.handleEvent(FeatureDragEvent.makeShapeDragStartEvent(this, feature, point));
+    }
+
+    @Override
+    public void onDrag(Feature feature, LatLng point) {
+        mManager.handleEvent(FeatureDragEvent.makeShapeDragEvent(this, feature, point));
+    }
+
+    @Override
+    public void onDragEnd(Feature feature, LatLng point) {
+        mManager.handleEvent(FeatureDragEvent.makeShapeDragEndEvent(this, feature, point));
     }
 
     private GeoJsonOptions getOptions() {

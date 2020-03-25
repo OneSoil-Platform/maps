@@ -38,6 +38,7 @@ public abstract class RCTLayer<T extends Layer> extends AbstractMapFeature {
     protected Double mMaxZoomLevel;
     protected ReadableMap mReactStyle;
     protected Expression mFilter;
+    protected boolean mDraggable;
 
     protected MapboxMap mMap;
     protected T mLayer;
@@ -134,6 +135,10 @@ public abstract class RCTLayer<T extends Layer> extends AbstractMapFeature {
         }
     }
 
+    public Expression getFilter() {
+        return mFilter;
+    }
+
     public void setFilter(ReadableArray readableFilterArray) {
         Expression filterExpression = ExpressionParser.from(readableFilterArray);
 
@@ -147,6 +152,14 @@ public abstract class RCTLayer<T extends Layer> extends AbstractMapFeature {
                 updateFilter(Expression.literal(true));
             }
         }
+    }
+
+    public boolean isDraggable() {
+        return mDraggable;
+    }
+
+    public void setDraggable(boolean draggable) {
+        this.mDraggable = draggable;
     }
 
     public void add() {

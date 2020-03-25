@@ -8,6 +8,7 @@ import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.WritableNativeMap;
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
+import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.style.expressions.Expression;
 import com.mapbox.mapboxsdk.style.sources.VectorSource;
 import com.mapbox.rctmgl.events.AndroidCallbackEvent;
@@ -29,6 +30,21 @@ public class RCTMGLVectorSource extends RCTMGLTileSource<VectorSource> {
 
     public void onPress(OnPressEvent event) {
         mManager.handleEvent(FeatureClickEvent.makeVectorSourceEvent(this, event));
+    }
+
+    @Override
+    public void onDragStart(Feature feature, LatLng point) {
+        // Not implemented yet
+    }
+
+    @Override
+    public void onDrag(Feature feature, LatLng point) {
+        // Not implemented yet
+    }
+
+    @Override
+    public void onDragEnd(Feature feature, LatLng point) {
+        // Not implemented yet
     }
 
     @Override
