@@ -139,6 +139,9 @@ public class RCTMGLShapeSourceManager extends AbstractEventEmitter<RCTMGLShapeSo
     public Map<String, String> customEvents() {
         return MapBuilder.<String, String>builder()
                 .put(EventKeys.SHAPE_SOURCE_LAYER_CLICK, "onMapboxShapeSourcePress")
+                .put(EventKeys.SHAPE_SOURCE_LAYER_DRAG_START, "onMapboxShapeSourceDragStart")
+                .put(EventKeys.SHAPE_SOURCE_LAYER_DRAG, "onMapboxShapeSourceDrag")
+                .put(EventKeys.SHAPE_SOURCE_LAYER_DRAG_END, "onMapboxShapeSourceDragEnd")
                 .build();
     }
 }

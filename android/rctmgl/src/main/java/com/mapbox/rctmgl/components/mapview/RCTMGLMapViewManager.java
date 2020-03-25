@@ -184,6 +184,11 @@ public class RCTMGLMapViewManager extends AbstractEventEmitter<RCTMGLMapView> {
         mapView.setReactContentInset(array);
     }
 
+    @ReactProp(name="locale")
+    public void setLocale(RCTMGLMapView mapView, String locale) {
+        mapView.setReactLocale(locale);
+    }
+
     //endregion
 
     //region Custom Events

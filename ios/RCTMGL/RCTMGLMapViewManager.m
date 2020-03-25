@@ -69,6 +69,7 @@ RCT_EXPORT_MODULE(RCTMGLMapView)
 
 #pragma mark - React View Props
 
+RCT_REMAP_VIEW_PROPERTY(locale, reactLocale, NSString)
 RCT_REMAP_VIEW_PROPERTY(localizeLabels, reactLocalizeLabels, BOOL)
 RCT_REMAP_VIEW_PROPERTY(scrollEnabled, reactScrollEnabled, BOOL)
 RCT_REMAP_VIEW_PROPERTY(pitchEnabled, reactPitchEnabled, BOOL)
@@ -404,8 +405,8 @@ RCT_EXPORT_METHOD(setSourceVisibility:(nonnull NSNumber *)reactTag
 
 - (MGLAnnotationView *)mapView:(MGLMapView *)mapView viewForAnnotation:(id<MGLAnnotation>)annotation
 {
-    if ([annotation isKindOfClass:[MGLUserLocation class]] && mapView.userLocation != nil) {
-        return [[RCTMGLUserLocation sharedInstance] builtinUserAnnotation];
+    if ([annotation isKindOfClass:[MGLUserLocation class]]) {
+        return nil; // use default one
     }
     else if ([annotation isKindOfClass:[RCTMGLPointAnnotation class]]) {
         RCTMGLPointAnnotation *rctAnnotation = (RCTMGLPointAnnotation *)annotation;
@@ -536,8 +537,10 @@ RCT_EXPORT_METHOD(setSourceVisibility:(nonnull NSNumber *)reactTag
 - (void)mapView:(MGLMapView *)mapView didFinishLoadingStyle:(MGLStyle *)style
 {
     RCTMGLMapView *reactMapView = (RCTMGLMapView*)mapView;
-    //style.localizesLabels = reactMapView.reactLocalizeLabels;
-    
+
+    NSLocale *locale = [NSLocale localeWithLocaleIdentifier:reactMapView.reactLocale];
+    [style localizeLabelsIntoLocale:locale];
+
     for (int i = 0; i < reactMapView.sources.count; i++) {
         RCTMGLSource *source = reactMapView.sources[i];
         source.map = reactMapView;

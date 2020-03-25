@@ -37,7 +37,19 @@ static double const M2PI = M_PI * 2;
         _layerWaiters = [[NSMutableDictionary alloc] init];
         _styleWaiters = [[NSMutableArray alloc] init];
     }
+    // Small hack to always re-fetch user location, when opening app again
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(appWillEnterForeground:) name:UIApplicationWillEnterForegroundNotification object:nil];
+
+    // Enable user location now
+    [self appWillEnterForeground:nil];
+
     return self;
+}
+
+- (void)appWillEnterForeground:(NSNotification*)params
+{
+    self.showsUserLocation = YES;
+    self.showsUserHeadingIndicator = YES;
 }
 
 - (void)layoutSubviews

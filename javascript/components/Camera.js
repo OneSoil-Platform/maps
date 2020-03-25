@@ -276,7 +276,8 @@ class Camera extends React.Component {
       cB.paddingTop !== nB.paddingTop ||
       cB.paddingLeft !== nB.paddingLeft ||
       cB.paddingRight !== nB.paddingRight ||
-      cB.paddingBottom !== nB.paddingBottom
+      cB.paddingBottom !== nB.paddingBottom ||
+      cB.triggerKey !== nB.triggerKey
     );
   }
 

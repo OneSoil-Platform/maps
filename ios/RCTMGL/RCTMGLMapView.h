@@ -41,6 +41,7 @@ typedef void (^StyleLoadedBlock) (MGLStyle* style);
 @property (nonatomic, strong) NSMutableDictionary<NSString*, NSMutableArray<FoundLayerBlock>*> *layerWaiters;
 @property (nonatomic, strong) NSMutableArray<StyleLoadedBlock> *styleWaiters;
 
+@property (nonatomic, assign) NSString *reactLocale;
 @property (nonatomic, assign) BOOL reactLocalizeLabels;
 @property (nonatomic, assign) BOOL reactScrollEnabled;
 @property (nonatomic, assign) BOOL reactPitchEnabled;
@@ -79,6 +80,7 @@ typedef void (^StyleLoadedBlock) (MGLStyle* style);
 - (RCTMGLSource *)getTouchableSourceWithHighestZIndex:(NSArray<RCTMGLSource *> *)touchableSources;
 - (NSString *)takeSnap:(BOOL)writeToDisk;
 - (void)didChangeUserTrackingMode:(MGLUserTrackingMode)mode animated:(BOOL)animated;
+- (void)appWillEnterForeground:(NSNotification*)params;
 
 - (void)waitForLayerWithID:(nonnull NSString*)layerID then:(void (^)(MGLStyleLayer* layer))foundLayer;
 

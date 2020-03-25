@@ -40,8 +40,11 @@ public class EventTypes {
     public static final String OFFLINE_TILE_LIMIT = "offlinetilelimit";
     public static final String OFFLINE_STATUS = "offlinestatus";
 
-    // shape source event types
+    // source event types
     public static final String SHAPE_SOURCE_LAYER_CLICK = "shapesourcelayerpress";
+    public static final String SHAPE_SOURCE_LAYER_DRAG_START = "shapesourcelayerdragstart";
+    public static final String SHAPE_SOURCE_LAYER_DRAG = "shapesourcelayerdrag";
+    public static final String SHAPE_SOURCE_LAYER_DRAG_END = "shapesourcelayerdragend";
     public static final String VECTOR_SOURCE_LAYER_CLICK = "vectorsourcelayerpress";
     public static final String RASTER_SOURCE_LAYER_CLICK = "rastersourcelayerpress";
 

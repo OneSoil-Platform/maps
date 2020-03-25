@@ -232,6 +232,10 @@ public abstract class RCTSource<T extends Source> extends AbstractMapFeature {
 
     public abstract void onPress(OnPressEvent event);
 
+    public abstract void onDragStart(Feature feature, LatLng point);
+    public abstract void onDrag(Feature feature, LatLng point);
+    public abstract void onDragEnd(Feature feature, LatLng point);
+
     public static boolean isDefaultSource(String sourceID) {
         return DEFAULT_ID.equals(sourceID);
     }

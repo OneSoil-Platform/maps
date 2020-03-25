@@ -21,7 +21,7 @@ public class UserTrackingMode {
         if (!isShowUserLocation) {
             return -1;
         } else if (mode == NONE) {
-            return -1;
+            return RenderMode.COMPASS;
         } else if (mode == FollowWithCourse) {
             return RenderMode.GPS;
         } else if (mode == FollowWithHeading) {

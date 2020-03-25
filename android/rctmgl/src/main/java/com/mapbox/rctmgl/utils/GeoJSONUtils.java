@@ -11,13 +11,12 @@ import com.mapbox.geojson.FeatureCollection;
 import com.mapbox.geojson.Geometry;
 import com.mapbox.geojson.GeometryCollection;
 import com.mapbox.geojson.LineString;
-import com.mapbox.geojson.MultiPoint;
+import com.mapbox.geojson.MultiPolygon;
 import com.mapbox.geojson.Point;
 import com.mapbox.geojson.Polygon;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.geometry.LatLngBounds;
 import com.mapbox.mapboxsdk.geometry.LatLngQuad;
-import com.mapbox.mapboxsdk.style.light.Position;
 import com.mapbox.turf.TurfMeasurement;
 
 import java.util.ArrayList;
@@ -52,6 +51,8 @@ public class GeoJSONUtils {
                 return fromLineString((LineString) geometry);
             case "Polygon":
                 return fromPolygon((Polygon) geometry);
+            case "MultiPolygon":
+                return fromMultipolygon((MultiPolygon) geometry);
             default:
                 return null;
         }
@@ -75,6 +76,13 @@ public class GeoJSONUtils {
         WritableMap map = Arguments.createMap();
         map.putString("type", "Polygon");
         map.putArray("coordinates", getCoordinates(polygon));
+        return map;
+    }
+
+    public static WritableMap fromMultipolygon(MultiPolygon multiPolygon) {
+        WritableMap map = Arguments.createMap();
+        map.putString("type", "MultiPolygon");
+        map.putArray("coordinates", getCoordinates(multiPolygon));
         return map;
     }
 
@@ -109,6 +117,29 @@ public class GeoJSONUtils {
             }
 
             array.pushArray(innerArray);
+        }
+
+        return array;
+    }
+
+    public static WritableArray getCoordinates(MultiPolygon multiPolygon) {
+        WritableArray array = Arguments.createArray();
+
+        List<List<List<Point>>> points = multiPolygon.coordinates();
+        if (points == null) {
+            return array;
+        }
+
+        for (List<List<Point>> curPolygon : points) {
+            for (List<Point> curPoint : curPolygon) {
+                WritableArray innerArray = Arguments.createArray();
+
+                for (Point point : curPoint) {
+                    innerArray.pushArray(Arguments.fromArray(pointToDoubleArray(point)));
+                }
+
+                array.pushArray(innerArray);
+            }
         }
 
         return array;
