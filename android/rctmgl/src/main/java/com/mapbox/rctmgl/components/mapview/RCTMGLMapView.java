@@ -911,9 +911,6 @@ public class RCTMGLMapView extends MapView implements OnMapReadyCallback, Mapbox
     }
 
     public void getCoordinateFromView(String callbackID, PointF pointInView) {
-        final DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
-        pointInView.x *= metrics.scaledDensity;
-        pointInView.y *= metrics.scaledDensity;
 
         float density = getDisplayDensity();
         pointInView.x *= density;
