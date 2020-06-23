@@ -20,6 +20,7 @@ import com.mapbox.android.core.permissions.PermissionsManager;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.util.Locale;
 
@@ -154,8 +155,13 @@ public class LocationManager implements LocationEngineCallback<LocationEngineRes
         Log.d(LOG_TAG, String.format(Locale.ENGLISH, "Tick [%f, %f]", location.getLongitude(), location.getLatitude()));
         Log.d(LOG_TAG, String.format(Locale.ENGLISH, "Listener count %d", listeners.size()));
 
-        for (OnUserLocationChange listener : listeners) {
-            listener.onLocationChange(location);
+        try {
+          for (OnUserLocationChange listener : listeners) {
+              listener.onLocationChange(location);
+          }
+        }
+        catch (ConcurrentModificationException ex) {
+          // We don't really care here
         }
     }
 

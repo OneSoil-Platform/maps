@@ -163,7 +163,8 @@ public class RCTMGLCamera extends AbstractMapFeature {
 
     @Override
     public void removeFromMap(RCTMGLMapView mapView) {
-
+        mLocationManager.removeLocationListener(mLocationEnabledListener);
+        mLocationManager.removeLocationListener(mLocationChangeListener);
     }
 
     public void setStop(CameraStop stop) {
