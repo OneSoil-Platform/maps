@@ -90,7 +90,7 @@ class Logger {
         message.startsWith('Request failed due to a permanent error: Canceled')
       ) {
         // this seems to happening too much to show a warning every time
-        return 'info';
+        return false;
       }
     }
     return level;
@@ -100,6 +100,11 @@ class Logger {
     if (!this.logCallback || !this.logCallback(log)) {
       let {message} = log;
       let level = this.effectiveLevel(log);
+
+      if (!level) {
+        return;
+      }
+
       if (level === 'error') {
         console.error('Mapbox error', message, log);
       } else if (level === 'warning') {

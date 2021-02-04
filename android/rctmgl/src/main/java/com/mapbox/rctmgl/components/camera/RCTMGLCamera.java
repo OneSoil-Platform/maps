@@ -65,7 +65,6 @@ public class RCTMGLCamera extends AbstractMapFeature {
 
     private LocationManager mLocationManager;
     private UserLocation mUserLocation;
-    private boolean mShowUserLocation = true;
 
     private Point mCenterCoordinate;
 
@@ -83,22 +82,6 @@ public class RCTMGLCamera extends AbstractMapFeature {
     private String mFollowUserMode;
 
     private Context mContext;
-
-    private LocationManager.OnUserLocationChange mLocationEnabledListener = new LocationManager.OnUserLocationChange() {
-        @Override
-        public void onLocationChange(Location location) {
-            if (getMapboxMap() == null || mLocationComponent != null || (!mShowUserLocation && !mFollowUserLocation)) {
-                return;
-            }
-
-            mMapView.getMapboxMap().getStyle(new Style.OnStyleLoaded() {
-                @Override
-                public void onStyleLoaded(@NonNull Style style) {
-                    updateLocationLayer(style);
-                }
-            });
-        }
-    };
 
     private LocationManager.OnUserLocationChange mLocationChangeListener = new LocationManager.OnUserLocationChange() {
         @Override
@@ -159,7 +142,6 @@ public class RCTMGLCamera extends AbstractMapFeature {
 
     @Override
     public void removeFromMap(RCTMGLMapView mapView) {
-        mLocationManager.removeLocationListener(mLocationEnabledListener);
         mLocationManager.removeLocationListener(mLocationChangeListener);
     }
 
@@ -352,7 +334,6 @@ public class RCTMGLCamera extends AbstractMapFeature {
 
     private void enableLocation() {
         if (!PermissionsManager.areLocationPermissionsGranted(mContext)) {
-            mLocationManager.addLocationListener(mLocationEnabledListener);
             return;
         }
 

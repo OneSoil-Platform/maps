@@ -118,10 +118,6 @@ class OfflineManager {
     }
   }
 
-  async clearAmbientCache() {
-    await MapboxGLOfflineManager.clearAmbientCache();
-  }
-
   /**
    * Forces a revalidation of the tiles in the ambient cache and downloads a fresh version of the tiles from the tile server.
    * This is the recommend method for clearing the cache.

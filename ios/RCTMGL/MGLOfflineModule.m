@@ -260,13 +260,6 @@ RCT_EXPORT_METHOD(deletePack:(NSString *)name
     }];
 }
 
-RCT_EXPORT_METHOD(clearAmbientCache: (RCTPromiseResolveBlock)resolve :(RCTPromiseRejectBlock)reject)
-{
-    [[MGLOfflineStorage sharedOfflineStorage] clearAmbientCacheWithCompletionHandler:^(NSError *error) {
-        resolve(nil);
-    }];
-}
-
 RCT_EXPORT_METHOD(pausePackDownload:(NSString *)name
                   resolver:(RCTPromiseResolveBlock)resolve
                   rejecter:(RCTPromiseRejectBlock)reject)

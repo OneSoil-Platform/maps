@@ -44,7 +44,6 @@ import com.mapbox.mapboxsdk.maps.UiSettings;
 import com.mapbox.mapboxsdk.plugins.localization.LocalizationPlugin;
 import com.mapbox.mapboxsdk.plugins.annotation.OnSymbolClickListener;
 import com.mapbox.mapboxsdk.plugins.annotation.OnSymbolDragListener;
-import com.mapbox.mapboxsdk.plugins.localization.LocalizationPlugin;
 import com.mapbox.mapboxsdk.plugins.annotation.Symbol;
 import com.mapbox.mapboxsdk.plugins.annotation.SymbolManager;
 import com.mapbox.mapboxsdk.style.expressions.Expression;
@@ -141,7 +140,6 @@ public class RCTMGLMapView extends MapView implements OnMapReadyCallback, Mapbox
 
     private SymbolManager symbolManager;
 
-    private LocalizationPlugin mLocalizationPlugin;
     private String mLocalizedPlaceField = "name";
 
     private long mActiveMarkerID = -1;
@@ -437,7 +435,6 @@ public class RCTMGLMapView extends MapView implements OnMapReadyCallback, Mapbox
             @Override
             public void onStyleLoaded(@NonNull Style style) {
                 createSymbolManager(style);
-                setupLocalization(style);
                 setUpImage(style);
                 addQueuedFeatures();
                 setupLocalization(style);
@@ -1393,11 +1390,6 @@ public class RCTMGLMapView extends MapView implements OnMapReadyCallback, Mapbox
             }
         }
         return false;
-    }
-
-    private void setupLocalization(Style style) {
-        mLocalizationPlugin = new LocalizationPlugin(this, mMap, style);
-        mLocalizationPlugin.setMapLanguage(mLocalizedPlaceField);
     }
 
     private boolean canHandleEvent(String event) {

@@ -424,22 +424,6 @@ public class RCTMGLOfflineModule extends ReactContextBaseJavaModule {
         mProgressEventThrottle = eventThrottle;
     }
 
-    @ReactMethod
-    public void clearAmbientCache(final Promise promise) {
-        final OfflineManager offlineManager = OfflineManager.getInstance(mReactContext);
-        offlineManager.clearAmbientCache(new OfflineManager.FileSourceCallback() {
-            @Override
-            public void onSuccess() {
-                promise.resolve(null);
-            }
-
-            @Override
-            public void onError(@NonNull String message) {
-                promise.reject(OFFLINE_ERROR, message);
-            }
-        });
-    }
-
     private OfflineRegionDefinition makeDefinition(LatLngBounds latLngBounds, ReadableMap options) {
         return new OfflineTilePyramidRegionDefinition(
                 ConvertUtils.getString("styleURL", options, DEFAULT_STYLE_URL),
