@@ -545,14 +545,7 @@ public class RCTMGLMapView extends MapView implements OnMapReadyCallback, Mapbox
 
     private void setupLocalization(Style style) {
       mLocalizationPlugin = new LocalizationPlugin(RCTMGLMapView.this, mMap, style);
-      if (mLocalizeLabels) {
-          try {
-              mLocalizationPlugin.matchMapLanguageWithDeviceDefault();
-          } catch (Exception e) {
-              final String localeString = Locale.getDefault().toString();
-              Logger.w(LOG_TAG, String.format("Could not find matching locale for %s", localeString));
-          }
-      }
+      mLocalizationPlugin.setMapLanguage(mLocalizedPlaceField);
     }
 
     @Override

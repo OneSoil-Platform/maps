@@ -131,12 +131,11 @@ public class RCTMGLCamera extends AbstractMapFeature {
         updateMaxMinZoomLevel();
         updateMaxBounds();
 
+        // Hotfix for https://github.com/react-native-mapbox-gl/maps/issues/1167
+        enableLocation();
+
         if (mCameraStop != null) {
             updateCamera();
-        }
-
-        if (mFollowUserLocation) {
-            enableLocation();
         }
     }
 
